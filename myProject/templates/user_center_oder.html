@@ -1,0 +1,66 @@
+{% extends 'base_user_center.html' %}
+{% load static from staticfiles %}
+{% block active_order %}class="active"{% endblock %}
+{% block right %}
+
+<div class="right_content clearfix">
+        <h3 class="common_title2">全部订单</h3>
+            {% for order in order_list %}
+                <ul class="order_list_th w978 clearfix">
+                    <li class="col01">{{ order.submit_date }}</li>
+                    <li class="col02">{{ order.order_num | add:"10000" }} </li>
+                    <li class="col02 stress">{% if order.isPay %}已付款
+                                             {% else %}未付款       
+                                             {% endif %}</li>       
+                </ul>
+                
+                <table class="order_list_table w980">
+                    <tbody>
+                        <tr>
+                            <td width="55%">
+                                {% for order_data in order.order_detail_set.all %}
+                                <ul class="order_goods_list clearfix">
+                                    
+                                                  
+                                    <li class="col01"><img src='{% static order_data.odetail_goods_id.goods_pic_url %}'></li>
+                                    <li class="col02"><em>{{order_data.odetail_goods_id.goods_price}}/{{order_data.odetail_goods_id.goods_unit}}</em></li> 
+                                    <li class="col03">{{ order_data.odetail_goods_num }}</li>
+                                    <li class="col04">{{ order_data.odetail_totalprice }}</li> 
+
+                                    
+                                 
+                                </ul>
+                                {% endfor %}    
+                            </td>
+                            <td width="15%">{{ order.total_price }}</td>
+                            <td width="15%">{% if order.isPay %}已付款</td> <td width="15%">订单完成</td>
+                                            {% else %}未付款</td> <td width="15%"><a href="#" class="oper_btn">去付款</a></td>      
+                                            {% endif %}
+                            </tr>
+
+                    </tbody>
+                </table>
+           
+            {% endfor %}
+                
+
+                <div class="pagenation">
+                    {% ifnotequal pIndex 1 %}
+                    <a href="/user_center_oder{{ pIndex | add:'-1'  }}/"><上一页></a>
+                    {% endifnotequal %}
+                    {% for prange in pRange %}
+                        
+                        {% if prange == pIndex %}
+                            <a href="#" class="active">{{ prange }}</a>
+                        {% else %}
+                            <a href="/user_center_oder{{ prange }}/">{{ prange }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% ifequal pIndex pMax %}
+                    {% else %}
+                    <a href="/user_center_oder{{ pIndex | add:'1'  }}/"><下一页></a>
+                    {% endifequal %}
+                </div>
+</div>        
+{% endblock %}
+
